@@ -5,6 +5,7 @@
 
 # images
 *.jpg
+*.pdf
 *.png
 *.pgm
 *.ppm
