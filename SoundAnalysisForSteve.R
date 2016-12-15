@@ -203,9 +203,8 @@ rect(xleft = longBuzz$value[longBuzz$variable == "start"], ybottom = -10, border
 
 
 # freqs
-c(rep(1, nrow(lb_short)), 2:(nrow(lb_short) + 1))
 dev.off()
-pdf("figLongBuzz.pdf", width = 50, height = 10)
+pdf("figLongBuzz_fullSpectrum.pdf", width = 100, height = 10)
 layout(matrix(c(rep(1, nrow(lb_short)), 2:(nrow(lb_short) + 1)), 2, ncol = nrow(lb_short), byrow = TRUE))
 plot(y = scale(w4, scale = TRUE, center = FALSE), xlab = "time (s)", ylab = "Amplitude",
      x = seq(0, to = length(w4) / w2@samp.rate, length.out = length(w4)), 
@@ -223,6 +222,52 @@ for(ii in 1:nrow(lb_short)){
       # listen(w3, f = w2@samp.rate)
     
      # plot spectrum
+     freqRangeOfInterest <- c(0, 20)
+     
+     spp <- spec(w3, f = w2@samp.rate, PSD = TRUE, flim = freqRangeOfInterest, wl = 512)
+     
+     # filter to less than 400 Hz and greater than 195Hz
+     sppFilt <- spp[spp[,1] < freqRangeOfInterest[2] & spp[,1] > freqRangeOfInterest[1],] 
+     
+     # identify peaks in this spectrum
+     peaks <- which(diff(sign(diff(sppFilt[,2])))==-2)+1
+     sppPks <- sppFilt[peaks,]
+     # show top 5 highest peaks
+     (tp5 <- sppPks[order(sppPks[,2], decreasing = T)[1:5],])
+     points(x = tp5[,1], y = tp5[,2], col = 'red')
+     text(x = tp5[,1], y = tp5[,2], labels = paste(round(tp5[,1],digits = 3)*1000, "Hz"), adj = -.3)
+     lb_short$freqs[ii] <- tp5[1,1]
+     # Sys.sleep(0.1)
+     
+}
+dev.off()
+hist(lb_short$freqs)
+mean(lb_short$freqs)
+listen(sine(mean(lb_short$freqs)*1000))
+
+
+
+
+# freqs
+dev.off()
+pdf("figLongBuzz_ReducedSpectrum.pdf", width = 100, height = 10)
+layout(matrix(c(rep(1, nrow(lb_short)), 2:(nrow(lb_short) + 1)), 2, ncol = nrow(lb_short), byrow = TRUE))
+plot(y = scale(w4, scale = TRUE, center = FALSE), xlab = "time (s)", ylab = "Amplitude",
+     x = seq(0, to = length(w4) / w2@samp.rate, length.out = length(w4)), 
+     type = 'l')
+rect(xleft = longBuzz$value[longBuzz$variable == "start"], ybottom = -10, border = FALSE,
+     xright = longBuzz$value[longBuzz$variable == "stop"], ytop = 10, col = rgb(0,0,0, 0.5) 
+)
+
+
+lb_short$freqs <- NA
+for(ii in 1:nrow(lb_short)){
+     w3 <- cutw(w2, from = lb_short$start[ii], to =  lb_short$stop[ii], f = w2@samp.rate)
+     # oscillo(w3, f = w2@samp.rate, title = 'Zoomed section of sound from above')
+     # 
+     # listen(w3, f = w2@samp.rate)
+     
+     # plot spectrum
      freqRangeOfInterest <- c(0.2, 1)
      
      spp <- spec(w3, f = w2@samp.rate, PSD = TRUE, flim = freqRangeOfInterest, wl = 512)
@@ -235,8 +280,8 @@ for(ii in 1:nrow(lb_short)){
      sppPks <- sppFilt[peaks,]
      # show top 5 highest peaks
      (tp5 <- sppPks[order(sppPks[,2], decreasing = T)[1:5],])
-     points(x = tp5[1,1], y = tp5[1,2], col = 'red')
-     text(x = tp5[1,1], y = tp5[1,2], labels = paste(round(tp5[1,1],digits = 3)*1000, "Hz"), adj = -.3)
+     points(x = tp5[,1], y = tp5[,2], col = 'red')
+     text(x = tp5[,1], y = tp5[,2], labels = paste(round(tp5[,1],digits = 3)*1000, "Hz"), adj = -.3)
      lb_short$freqs[ii] <- tp5[1,1]
      # Sys.sleep(0.1)
      
@@ -245,6 +290,7 @@ dev.off()
 hist(lb_short$freqs)
 mean(lb_short$freqs)
 listen(sine(mean(lb_short$freqs)*1000))
+
 
 
 ##################################
@@ -294,7 +340,7 @@ for(ii in 1:nrow(sc_short)){
      # show top 5 highest peaks
      (tp5 <- sppPks[order(sppPks[,2], decreasing = T)[1:5],])
      points(x = tp5[,1], y = tp5[,2], col = 'red')
-     text(x = tp5[,1], y = tp5[,2], labels = paste(round(tp5[1,1],digits = 3)*1000, "Hz"), adj = -.3)
+     text(x = tp5[,1], y = tp5[,2], labels = paste(round(tp5[,1],digits = 3)*1000, "Hz"), adj = -.3)
      sc_short$freqs[ii] <- tp5[1,1]
      #Sys.sleep(0.1)
      
