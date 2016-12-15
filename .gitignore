@@ -3,9 +3,8 @@
 *.mov
 *.mp4
 
-# images
+# images, except pdf
 *.jpg
-*.pdf
 *.png
 *.pgm
 *.ppm
