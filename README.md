@@ -1,4 +1,4 @@
-# Sound analysis of bees for people at the U of A
+# Sound processing and data visualization for sounds of mating bees
 
 * Make an oscillogram in R (show time vs. sound)
 
