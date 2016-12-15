@@ -49,12 +49,45 @@ oscillo(w2, from = 0, to = 2)
 
 
 # view spectrogram of a small portion of the recording
-sp1 <- spectro(cutw(w2, from = 1, to = 2, f = w2@samp.rate), f = w2@samp.rate, ovlp = 90,
+
+pdf("SpectrogamAndOscillogram.pdf", width = 8, height = 5)
+sp1 <- spectro(cutw(w2, from = 1, to = 2, f = w2@samp.rate), f = w2@samp.rate, 
+               wl = 512,
+               wn = "hanning", 
+               ovlp = 50,
                osc = TRUE,
                palette = colorRampPalette(c("white", "black")))
+dev.off()
+
+str(sp1)
+length(sp1$freq)
+dim(sp1$amp)
+length(sp1$time)
+length(sp1$amp)
+
+css <- colSums((sp1$amp))
+length(css)
+par(mfrow = c(2,1))
+plot(css, type = 'l')
+oscillo(cutw(w2, from = 1, to = 2, f = w2@samp.rate), f = w2@samp.rate)
+lines(css + 10000, x = sp1$time, type = 'l', col = 'red')
+abline(h = )
+
+amps <- t(abs(sp1$amp))
+dim(amps)
+ncol(amps)
+amps[10:20, 60:70] <- 1000
+image(amps)
+summary(amps)
+
+sounds <- colSums(amps[, 50:100])
+plot(sounds, type = 'l')
+
+image(t(sp1$amp))
 
 
 
+# same thing, but can't put oscillogram below
 vv <- ggspectro(cutw(w2, from = 1, to = 3, f = w2@samp.rate), f = w2@samp.rate) + 
      stat_contour(geom="polygon", aes(fill=..level..), bins=30) + 
      scale_fill_continuous(name="Amplitude\n(dB)\n", limits=c(-30,0),
@@ -62,10 +95,34 @@ vv <- ggspectro(cutw(w2, from = 1, to = 3, f = w2@samp.rate), f = w2@samp.rate) 
      theme_classic()
 vv
 
+## fft
+oscillo(cutw(w2, from = 1, to = 2, f = w2@samp.rate), f = w2@samp.rate)
+rect(0.11, -10000000,  0.18, 1000000, border = FALSE, col = rgb(0,0,0, 0.5) )
 
-fund(w2, fmax = 1000, ylim = c(0, 1))
 
+w3 <- cutw(w2, from = 1.11, to = 1.18, f = w2@samp.rate)
+oscillo(w3, f = w2@samp.rate)
+listen(w3, f = w2@samp.rate)
 
+# plot spectrum
+freqRangeOfInterest <- c(0, 1)
 
-ggplot(sp1, aes(x = time, y = freq, color = amp)) + 
-     geom_point()
+spp <- spec(w3, f = w2@samp.rate, PSD = TRUE, flim = freqRangeOfInterest, wl = 512)
+
+# filter to less than 400 Hz and greater than 195Hz
+sppFilt <- spp[spp[,1] < freqRangeOfInterest[2] & spp[,1] > freqRangeOfInterest[1],] 
+
+# identify peaks in this spectrum
+peaks <- which(diff(sign(diff(sppFilt[,2])))==-2)+1
+sppPks <- sppFilt[peaks,]
+# show top 5 highest peaks
+(tp5 <- sppPks[order(sppPks[,2], decreasing = T)[1:5],])
+points(tp5, col = 'red')
+text(tp5, labels = round(tp5[,1], digits = 3), adj = -.3)
+
+# listen to the sine waves at those frequencies for comparison
+# listen(r, f = f, from = ret[[1]], to = ret[[2]] )
+pkNum <- 1
+listen(sine(tp5[pkNum,1]*1000, duration = 10000))
+listen(w3, f = w2@samp.rate)
+
