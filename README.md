@@ -5,3 +5,5 @@
 * Make spectrogram (shows frequency vs. time)
 
 * Make a zoomed-in view of a portion of the sound
+
+* Show FFT spectrum for a portion of the sound
