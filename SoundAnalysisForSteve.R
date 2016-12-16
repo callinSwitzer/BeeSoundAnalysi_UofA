@@ -1,5 +1,6 @@
 # Callin Switzer
 # 15 Dec 2016
+# update 16 Dec
 # Processing the sounds of mating bees
 
 # Make an oscillogram in R (show time vs. sound)
@@ -7,6 +8,8 @@
 # Make spectrogram (shows frequency vs. time)
 # 
 # Make a zoomed-in view of a portion of the sound
+#
+# Look at a spectrum for each of the "long buzzes" and "short clicks" 
 
 
 
@@ -346,3 +349,7 @@ for(ii in 1:nrow(sc_short)){
      
 }
 dev.off()
+
+
+
+
