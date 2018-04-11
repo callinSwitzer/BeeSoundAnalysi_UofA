@@ -47,15 +47,18 @@ w2 <- mono(w1, which = "both")
 # view oscillogram of mono wave
 oscillo(w2, from = 1, to = 2)
 
+op = par()
+op$mai
 
 # redo fig 2
 
 # view spectrogram of a small portion of the recording
 # make figure 1
-tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig2.tiff",width = 8, height = 5, units = 'in', res = 1200)
+tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig2_largeFonts.tiff",width = 8, height = 5, units = 'in', res = 1200)
+
 
 sp1 <- spectro(cutw(w2, from = 1, to = 2, f = w2@samp.rate), f = w2@samp.rate, dB = "D",
-               wl = 512,
+               wl = 512, cexaxis = 1.2, cexlab = 1.2, scalecexlab = 1.2, oma = c(1,1,1,1),
                wn = "hanning", 
                ovlp = 10,
                osc = TRUE,
@@ -72,7 +75,7 @@ dev.off()
 
 # redo fig 3
 
-tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3.tiff",width = 6.5, height = 8, units = 'in', res = 1200)
+tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_largeFonts.tiff",width = 6.5, height = 8, units = 'in', res = 1200)
 {
 aa = cutw(w2, from = 1, to = 2, f = w2@samp.rate)
 layout(matrix(c(1,1,2), nrow = 3, ncol = 1, byrow = TRUE))
@@ -82,7 +85,7 @@ plot(y = aa / max(aa), x = seq(0, 1, length.out = length(aa)), type = 'l', bty =
      )
 # add scale
 arrows(x0 = 0.8, y0 = -1.1, x1 = 1, y1 = -1.1, lwd = 1.2, length = 0.05, code = 3)
-text(0.9, -1.15, "0.2 s", adj = c(0.5, 1.3), cex = 1.1)
+text(0.9, -1.15, "0.2 s", adj = c(0.5, 1.3), cex = 1.5)
 
 # add line segments
 x0 = (1.435 - 1) 
@@ -102,7 +105,7 @@ lines(bb/ max(bb) - 3,  x = seq(0, 1, length.out = length(bb)))
 
 # add scale
 arrows(x0 = 0.8, y0 = -4.5+0.3, x1 = 1, y1 = -4.5 + 0.3, lwd = 1.2, length = 0.05, code = 3)
-text(0.9, -4.55+0.3, "0.014 s", adj = c(0.5, 1.3), cex = 1.1)
+text(0.9, -4.55+0.3, "0.014 s", adj = c(0.5, 1.3), cex = 1.5)
 
 # add letters
 text('A', x= 0, y = 1, cex = 2)
@@ -120,11 +123,12 @@ ref = max(spectrum$y)
 dB = 20* log10(spectrum$y / ref)
 yy <- c(rep(min(dB), length(dB)), rev(dB))
 
-plot(xx, yy, type = 'l', ylab = "Relative amplitude (dB)", xlab = "Frequency (Hz)", bty = "n", log = "x", ylim = c(-50, 0), cex.lab=1.1, xlim = c(100, 22050))
+plot(xx, yy, type = 'l', ylab = "Relative amplitude (dB)", xlab = "Frequency (Hz)", 
+     bty = "n", log = "x", ylim = c(-50, 0), cex.axis = 1.5, cex.lab = 1.5, xlim = c(100, 22050))
 polygon(x = xx, y = yy, col='black', border=NA)
 
 # add text
-text(round(xx[yy == max(yy)]), y = 0, labels = paste(round(xx[yy == max(yy)]), "Hz", sep  = " "), adj = c(-0.2, 0.5), cex = 1.1)
+text(round(xx[yy == max(yy)]), y = 0, labels = paste(round(xx[yy == max(yy)]), "Hz", sep  = " "), adj = c(-0.2, 0.5), cex = 1.5)
 
 mtext('C', at = c(51, 15), cex = 2 * 2/3)
 
@@ -135,7 +139,7 @@ dev.off()
 
 
 
-tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_no_dB.tiff",width = 6.5, height = 8, units = 'in', res = 1200)
+tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_no_dB_largeFonts.tiff",width = 6.5, height = 8, units = 'in', res = 1200)
 {
      aa = cutw(w2, from = 1, to = 2, f = w2@samp.rate)
      layout(matrix(c(1,1,2), nrow = 3, ncol = 1, byrow = TRUE))
@@ -145,7 +149,7 @@ tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_no_dB.tiff",wid
      )
      # add scale
      arrows(x0 = 0.8, y0 = -1.1, x1 = 1, y1 = -1.1, lwd = 1.2, length = 0.05, code = 3)
-     text(0.9, -1.15, "0.2 s", adj = c(0.5, 1.3), cex = 1.1)
+     text(0.9, -1.15, "0.2 s", adj = c(0.5, 1.3), cex = 1.5)
      
      # add line segments
      x0 = (1.435 - 1) 
@@ -165,7 +169,7 @@ tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_no_dB.tiff",wid
      
      # add scale
      arrows(x0 = 0.8, y0 = -4.5+0.3, x1 = 1, y1 = -4.5 + 0.3, lwd = 1.2, length = 0.05, code = 3)
-     text(0.9, -4.55+0.3, "0.014 s", adj = c(0.5, 1.3), cex = 1.1)
+     text(0.9, -4.55+0.3, "0.014 s", adj = c(0.5, 1.3), cex = 1.5)
      
      # add letters
      text('A', x= 0, y = 1, cex = 2)
@@ -187,12 +191,12 @@ tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_no_dB.tiff",wid
      xx = xx[xx>=99]
      
      plot(xx, yy, type = 'l', ylab = "Relative amplitude", xlab = "Frequency (Hz)", 
-          bty = "n", log = "x", cex.lab=1.1, xlim = c(100, 22050), yaxt="n")
-     axis(side = 2, at = c(0,1))
+          bty = "n", log = "x", cex.lab=1.5, cex.axis = 1.5, xlim = c(100, 22050), yaxt="n")
+     axis(side = 2, at = c(0,1), cex.axis = 1.5, cex.lab = 1.5)
      polygon(x = xx, y = yy, col='black', border=NA)
      
      # add text
-     text(round(xx[yy == max(yy)]), y = 1, labels = paste(round(xx[yy == max(yy)]), "Hz", sep  = " "), adj = c(-0.2, 0.5), cex = 1.1)
+     text(round(xx[yy == max(yy)]), y = 1, labels = paste(round(xx[yy == max(yy)]), "Hz", sep  = " "), adj = c(-0.2, 0.5), cex = 1.5)
      
      mtext('C', at = c(51, 15), cex = 2 * 2/3)
      
@@ -201,4 +205,19 @@ tiff("~/Dropbox/dataAnalysisForOthers/SoundAnalysisforSteve/Fig3_no_dB.tiff",wid
 }
 dev.off()
 
+
+
+# find max 
+xx[which.max(yy)]
+
+
+
+xx2 <- xx[xx > 600 & xx < 1000]
+yy2 <- yy[xx > 600 & xx < 1000]
+
+xx2[which.max(yy2)]
+
+points(xx2[which.max(yy2)], yy2[which.max(yy2)], col = 'red')
+points(xx[which.max(yy)], yy[which.max(yy)], col = 'red')
+xx[which.max(yy)]
 
